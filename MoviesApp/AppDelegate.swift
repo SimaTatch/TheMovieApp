@@ -1,16 +1,10 @@
-//
-//  AppDelegate.swift
-//  MoviesApp
-//
-//  Created by Серафима  Татченкова  on 20.07.2022.
-//
 
 import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -30,7 +24,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
-
+    
+//    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+//        let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+//
+//        if components?.scheme == "themoviemanager" && components?.path == "authentication" {
+//            let loginVC = window?.rootViewController as! AuthorizationViewController
+//
+//            TMDBClient.createSessionId(completion: loginVC.handleSessionResponse(success:error:))
+//        }
+//        return true
+//    }
 }
 
