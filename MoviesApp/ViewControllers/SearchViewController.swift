@@ -80,17 +80,22 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         if isFiltering {
             movies.count
         }
-        return MovieModel.trending.count
+//            else {
+            return MovieModel.trending.count
+//        }
+//        return 0
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if isFiltering {
             return "Search Results"
+        } else {
+            return "Trending"
         }
-        return "Trending"
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -129,7 +134,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
         var movie: Movie
         
         if isFiltering {
@@ -137,14 +141,13 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         } else {
             movie = MovieModel.trending[indexPath.row]
         }
+
         if let movieId = movie.id {
-            TMDBClient.getMovieDetails(movie_id: String(movieId)) { details, error in
-                if let details = details {
-                    let detailVC = DetailViewController(details: details, movieId: String(movieId))
-                    self.navigationController?.present(detailVC, animated: true)
-                }
-            }
+            let detailVC = DetailViewController(movie: movie, movieId:  String(movieId))
+            detailVC.movie = movie
+            self.navigationController?.pushViewController(detailVC, animated: true)
         }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

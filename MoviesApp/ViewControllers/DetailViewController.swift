@@ -5,30 +5,35 @@ import SDWebImage
 
 class DetailViewController: UIViewController {
     
+    var contentSize: CGSize{
+        CGSize(width: view.frame.width, height: view.frame.height)
+    }
     let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .light, scale: .small)
-    var isSaved: Bool?
-    var details: MovieDetails
+    
     var movieId: String
+    var movie: Movie
     
-//    var isWatchlist: Bool {
-//        return MovieModel.watchlist.contains(details)
-//    }
-//    
-//    var isFavorite: Bool {
-//        return MovieModel.favorites.contains(details)
-//    }
+    var isWatchlist: Bool {
+        return MovieModel.watchlist.contains(movie)
+    }
     
-    init(details: MovieDetails, movieId: String) {
-        self.details = details
+    var isFavorite: Bool {
+        return MovieModel.favorites.contains(movie)
+    }
+    
+    init(movie: Movie, movieId: String) {
+        self.movie = movie
         self.movieId = movieId
-        self.isSaved = false
-       
-        self.movieTitle.text = details.title
-        self.movieDescription.text = details.overview
-        if let runtime = details.runtime {
-            self.movieRuntime.text = String("\(runtime)m")
+        if movie.title != nil {
+            self.movieTitle.text = movie.title
+        } else {
+            self.movieTitle.text = movie.name
         }
-        if let voteAve = details.voteAverage {
+        self.movieDescription.text = movie.overview
+//        if let runtime = movie.runtime {
+//            self.movieRuntime.text = String("\(runtime)m")
+//        }
+        if let voteAve = movie.voteAverage {
             let voteAverageValue = Float((voteAve * 10).rounded())
             let voteAverageString = String(voteAverageValue.clean)
             self.progressView.progress = Float(voteAve/10)
@@ -36,15 +41,15 @@ class DetailViewController: UIViewController {
         }
         super.init(nibName: nil, bundle: nil)
 //        self.navigationController?.navigationBar.topItem?.title = details.title
-        if let posterPath = details.posterPath {
-            TMDBClient.downloadPosterImage(posterPath: posterPath) { (data, error) in
-                guard let data = data else {
-                    return
-                }
-                let downloadedImage = UIImage(data: data)
-                self.posterImage.image = downloadedImage
-            }
-        }
+//        if let posterPath = movie.posterPath {
+//            TMDBClient.downloadPosterImage(posterPath: posterPath) { (data, error) in
+//                guard let data = data else {
+//                    return
+//                }
+//                let downloadedImage = UIImage(data: data)
+//                self.posterImage.image = downloadedImage
+//            }
+//        }
     }
     
     required init?(coder: NSCoder) {
@@ -53,17 +58,21 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        self.view.setGradientBackground()
+        setupCollectionView()
+        setupViews()
+        
+        toggleWatchButton(self.watchlistButton, isSaved: isWatchlist)
+        toggleFavButton(self.favoriteButton, isSaved: isFavorite)
+        
+        TMDBClient.downloadPosterImage(posterPath: movie.posterPath!, completion: handleDownloadImageResponse(data:error:))
         
         TMDBClient.getCast(movie_id: movieId) { cast, error in
             MovieCast.castList = cast
             DispatchQueue.main.async {
                 self.castCollectionView.reloadData()
             }
-           
         }
-        setupCollectionView()
-        setupViews()
     }
     
     override func viewWillLayoutSubviews(){
@@ -72,6 +81,81 @@ class DetailViewController: UIViewController {
         castCollectionView.isUserInteractionEnabled = true
     }
     
+    //MARK: - Handle responces
+    func handleWatchlistResponses(success: Bool, error: Error?) {
+        if success {
+            if isWatchlist {
+                MovieModel.watchlist = MovieModel.watchlist.filter() {
+                    $0 != self.movie
+                }
+            } else {
+                MovieModel.watchlist.append(movie)
+            }
+            toggleWatchButton(watchlistButton, isSaved: isWatchlist)
+        } else {
+            showMarkFailure(message: error?.localizedDescription ?? "")
+        }
+    }
+    func handleFavoriteListResponse(success: Bool, error: Error?) {
+        if success {
+            if isFavorite {
+                MovieModel.favorites = MovieModel.favorites.filter() {
+                    $0 != self.movie
+                }
+            } else {
+                MovieModel.favorites.append(movie)
+            }
+            toggleFavButton(favoriteButton, isSaved: isFavorite)
+        } else  {
+            showMarkFailure(message: error?.localizedDescription ?? "")
+        }
+    }
+    func handleDownloadImageResponse(data: Data?, error: Error?) {
+        if let data = data {
+            let downloadedImage = UIImage(data: data)
+            DispatchQueue.main.async {
+                self.posterImage.image = downloadedImage
+            }
+        }
+    }
+    @objc func buttonTaped(sender: UIButton) {
+        switch sender.currentTitle{
+        case "Favorite":
+            TMDBClient.markFavorite(movieId: Int(movieId) ?? 0, favorite: isFavorite, completion: handleFavoriteListResponse(success:error:))
+        case "Watchlist":
+            TMDBClient.markWatchlist(movieId: Int(movieId) ?? 0, watchlist: isWatchlist, completion: handleWatchlistResponses(success:error:))
+        default:
+            return
+        }
+    }
+    func showMarkFailure(message: String) {
+        let alertVC = UIAlertController(title: "Sorry, you can't mark this movie. Please, login first.", message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alertVC, animated: true, completion: nil)
+    }
+    //MARK: - Set buttons' color
+    func toggleFavButton(_ button: UIButton, isSaved: Bool) {
+        if isSaved {
+            let image = UIImage(systemName: "heart.fill", withConfiguration: largeConfig)!
+            button.setImage(image, for: .normal)
+        } else {
+            let image = UIImage(systemName: "heart", withConfiguration: largeConfig)!
+            button.setImage(image, for: .normal)
+        }
+    }
+    func toggleWatchButton(_ button: UIButton, isSaved: Bool) {
+        if isSaved {
+            let image = UIImage(systemName: "bookmark.fill", withConfiguration: largeConfig)!
+            button.setImage(image, for: .normal)
+        } else {
+            let image = UIImage(systemName: "bookmark", withConfiguration: largeConfig)!
+            button.setImage(image, for: .normal)
+        }
+    }
+    
+    //MARK: - Setup UIs
     let movieTitle: UILabel = {
       let label = UILabel()
         label.font = .openSans_SemiBold18
@@ -159,7 +243,8 @@ class DetailViewController: UIViewController {
         let stackView = UIStackView()
         stackView.axis = NSLayoutConstraint.Axis.horizontal
         stackView.alignment = .fill
-        stackView.distribution = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 3
         stackView.isUserInteractionEnabled = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -204,36 +289,15 @@ class DetailViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    var contentSize: CGSize{
-        CGSize(width: view.frame.width, height: view.frame.height)
-    }
-    
-    @objc func buttonTaped(sender: UIButton) {
-        switch sender.currentTitle{
-        case "Favorite":
-            isSaved?.toggle()
-            sender.setImage(changeFavouriteButton(isSaved: isSaved ?? false), for: .normal)
-        case "Watchlist":
-            isSaved?.toggle()
-            sender.setImage(changeWhatchlistButton(isSaved: isSaved ?? false), for: .normal)
-        default:
-            return
-        }
-    }
-    private func changeFavouriteButton(isSaved: Bool) -> UIImage {
-        return isSaved ? UIImage(systemName: "heart.fill", withConfiguration: largeConfig)! : UIImage(systemName: "heart", withConfiguration: largeConfig)!
-    }
-    private func changeWhatchlistButton(isSaved: Bool) -> UIImage {
-        return isSaved ? UIImage(systemName: "bookmark.fill", withConfiguration: largeConfig)! : UIImage(systemName: "bookmark", withConfiguration: largeConfig)!
-    }
-    
-    //MARK: Setup CastCollectionView
+
+    //MARK: - Setup CastCollectionView
     func setupCollectionView() {
         castCollectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.reuseId)
         castCollectionView.dataSource = self
         castCollectionView.delegate = self
     }
 
+    //MARK: - AddSubviews and makeConstraints
     func setupViews() {
         view.addSubview(scrollView)
         scrollView.addSubview(scrollViewContainer)
@@ -264,12 +328,11 @@ class DetailViewController: UIViewController {
             make.height.equalTo(scrollView.snp.height)
             make.width.equalTo(view.safeAreaLayoutGuide.snp.width)
         }
-        
         movieTitle.snp.makeConstraints { make in
             make.top.equalTo(scrollViewContainer.snp.top)
             make.left.equalTo(scrollViewContainer.snp.left).inset(5)
             make.right.equalTo(scrollViewContainer.snp.right)
-            make.height.equalTo(30)
+            make.height.equalTo(50)
         }
         progressStackView.snp.makeConstraints { make in
             make.top.equalTo(movieTitle.snp.bottom)
@@ -310,7 +373,7 @@ class DetailViewController: UIViewController {
         buttonsStackView.snp.makeConstraints { make in
             make.top.equalTo(movieDescription.snp.bottom)
             make.centerX.equalTo(scrollViewContainer.snp.centerX)
-            make.width.equalTo(170)
+            make.width.equalTo(175)
             make.height.equalTo(70)
         }
         seriesCastLabel.snp.makeConstraints { make in

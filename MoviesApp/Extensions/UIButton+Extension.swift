@@ -7,7 +7,7 @@ extension UIButton {
         self.backgroundColor = .clear
         self.layer.cornerRadius = 5
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.specialLightGray.cgColor
+        self.layer.borderColor = UIColor.someDarkBlue.cgColor
         self.titleLabel?.font = .openSans_Regular16
         self.titleLabel?.minimumScaleFactor = 0.3
         self.tintColor = .someDarkBlue

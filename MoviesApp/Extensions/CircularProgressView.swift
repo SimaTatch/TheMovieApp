@@ -29,11 +29,11 @@ class CircularProgressView: UIView {
     var progress: Float {
         didSet{
             
-            if progress > 0.70 {
+            if progress >= 0.70 {
                 progressColor = UIColor.systemGreen.withAlphaComponent(1)
                 trackColor = UIColor.systemGreen.withAlphaComponent(0.3)
             }
-            if progress > 0.45 && progress < 0.70 {
+            if progress >= 0.45 && progress < 0.70 {
                 progressColor = UIColor.systemOrange.withAlphaComponent(1)
                 trackColor = UIColor.systemOrange.withAlphaComponent(0.3)
             }

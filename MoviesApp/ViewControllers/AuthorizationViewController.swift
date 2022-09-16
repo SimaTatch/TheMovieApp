@@ -74,7 +74,12 @@ class AuthorizationViewController: UIViewController {
         setLoggingIn(false)
         if success {
             TMDBClient.accountDetails(completion: handleAccountDetailsResponse(success:error:))
-
+                TMDBClient.getFavoriteList { movies, error in
+                    MovieModel.favorites = movies
+                }
+                TMDBClient.getWatchlist { movies, error in
+                    MovieModel.watchlist = movies
+                }
         } else {
             showLoginFailure(message: error?.localizedDescription ?? "")
         }
@@ -323,31 +328,26 @@ class AuthorizationViewController: UIViewController {
         userNameTextField.snp.makeConstraints { make in
             make.top.equalTo(userNameLabel.snp.bottom).inset(-4)
             make.left.right.equalTo(0)
-//            make.width.equalTo(343)
             make.height.equalTo(52)
         }
         passwordLabel.snp.makeConstraints { make in
             make.top.equalTo(userNameTextField.snp.bottom).inset(-16)
             make.left.right.equalTo(0)
-//            make.width.equalTo(343)
             make.height.equalTo(22)
         }
         passwordTextField.snp.makeConstraints { make in
             make.top.equalTo(passwordLabel.snp.bottom).inset(-4)
             make.left.right.equalTo(0)
-//            make.width.equalTo(343)
             make.height.equalTo(52)
         }
         loginButton.snp.makeConstraints { make in
             make.top.equalTo(passwordTextField.snp.bottom).inset(-20)
             make.left.right.equalTo(0)
-//            make.width.equalTo(343)
             make.height.equalTo(42)
         }
         remindMeLaterButton.snp.makeConstraints { make in
             make.top.equalTo(loginButton.snp.bottom).inset(-20)
             make.left.right.equalTo(0)
-//            make.width.equalTo(343)
             make.height.equalTo(33)
         }
         activityIndicator.snp.makeConstraints { (make) in

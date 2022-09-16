@@ -3,8 +3,14 @@ import UIKit
 import Foundation
 import SnapKit
 
+protocol MovieTableViewCellDelegate: AnyObject{
+    func cellIsPressed(movie: Movie)
+}
+
 class MovieTableViewCell: UITableViewCell {
     
+//    var selectedIndex = 0
+    weak var delegate: MovieTableViewCellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -127,6 +133,28 @@ extension MovieTableViewCell: UICollectionViewDelegate, UICollectionViewDataSour
             }
         }
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.reuseId, for: indexPath) as! MovieCollectionViewCell
+        
+        var movie: Movie
+        
+        switch movieCellCollectionView.tag {
+        case 0: movie = MovieModel.popular[indexPath.row]
+        case 1: movie = MovieModel.topRated[indexPath.row]
+        case 2: movie = MovieModel.nowPlaying[indexPath.row]
+        case 3: movie = MovieModel.trending[indexPath.row]
+        default:
+            movie = MovieModel.popular[indexPath.row]
+        }
+        
+        if let movieId = movie.id {
+            let detailVC = DetailViewController(movie: movie, movieId:  String(movieId))
+            detailVC.movie = movie
+            self.delegate?.cellIsPressed(movie: movie)
+        }
     }
 }
 

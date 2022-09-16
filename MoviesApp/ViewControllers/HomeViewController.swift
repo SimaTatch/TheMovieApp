@@ -71,6 +71,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             movieCell.movieCellCollectionView.tag = indexPath.row
             movieCell.movieCellLabel.text = movieCategory
             movieCell.movieCellCollectionView.reloadData()
+            movieCell.delegate = self
         }
         return cell
     }
@@ -85,3 +86,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension HomeViewController: MovieTableViewCellDelegate {
+    
+    func cellIsPressed(movie: Movie) {
+        if let movieId = movie.id {
+            let detailVC = DetailViewController(movie: movie, movieId:  String(movieId))
+            detailVC.movie = movie
+            self.navigationController?.present(detailVC, animated: true)
+        }
+    }
+}

@@ -8,9 +8,6 @@ class TabBarController: UITabBarController {
         tabBar.unselectedItemTintColor = .specialGray
         tabBar.tintColor = .customLightBlue
         tabBar.backgroundColor = .white
-//        self.navigationItem.leftBarButtonItem = nil
-        self.navigationItem.hidesBackButton = true
-        setupNavigationBar()
         
         let homeVC = HomeViewController()
         let searchVC = SearchViewController()
@@ -27,6 +24,11 @@ class TabBarController: UITabBarController {
         ]
     }
     
+    override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     
     private func generateNavigationController(rootViewController: UIViewController, image: UIImage, title: String) -> UIViewController {
         let navigationVC = UINavigationController(rootViewController: rootViewController)
@@ -36,30 +38,30 @@ class TabBarController: UITabBarController {
         return navigationVC
     }
     
-    func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.uturn.backward"),
-            style: .plain,
-            target: self,
-            action: #selector(backButtonTapped))
-        
-        navigationItem.leftBarButtonItem?.tintColor = .white
-        navigationController?.hidesBarsOnSwipe = true
-    }
-
-    @objc func backButtonTapped(){
-        TMDBClient.logout {
-            DispatchQueue.main.async {
-                let auth = AuthorizationViewController()
-                if let parentNav = self.navigationController {
-                    parentNav.dismiss(animated: true) {
-                        parentNav.pushViewController(auth, animated: true)
-                        TMDBClient.Auth.sessionId = ""
-                        TMDBClient.Auth.guestSessionID = ""
-                    }
-                }
-            }
-        }
-    }
+//    func setupNavigationBar() {
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(
+//            image: UIImage(systemName: "arrow.uturn.backward"),
+//            style: .plain,
+//            target: self,
+//            action: #selector(backButtonTapped))
+//        
+//        navigationItem.leftBarButtonItem?.tintColor = .white
+//        navigationController?.hidesBarsOnSwipe = true
+//    }
+//
+//    @objc func backButtonTapped(){
+//        TMDBClient.logout {
+//            DispatchQueue.main.async {
+//                let auth = AuthorizationViewController()
+//                if let parentNav = self.navigationController {
+//                    parentNav.dismiss(animated: true) {
+//                        parentNav.pushViewController(auth, animated: true)
+//                        TMDBClient.Auth.sessionId = ""
+//                        TMDBClient.Auth.guestSessionID = ""
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 

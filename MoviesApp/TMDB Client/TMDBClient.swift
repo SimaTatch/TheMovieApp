@@ -206,6 +206,16 @@ class TMDBClient {
             }
         }
     }
+    class func getFavoriteList(completion: @escaping ([Movie], Error?) -> Void) {
+        
+        taskForGETRequest(url: Endpoints.getFavoriteList.url, response: MovieResults.self) { (response, error) in
+            if let response = response {
+                completion(response.results, nil)
+            } else {
+                completion([], error)
+            }
+        }
+    }
     
     class func search(query: String, completion: @escaping ([Movie], Error?) -> Void) -> URLSessionTask {
         let url = Endpoints.search(query).url
@@ -237,6 +247,40 @@ class TMDBClient {
                 completion(response.results, nil)
             } else {
                 completion([], error)
+            }
+        }
+    }
+    class func getMovieDetails(movie_id: String, completion: @escaping (MovieDetails?, Error?) -> Void) {
+        let url = Endpoints.getMovieDetails(movie_id).url
+        taskForGETRequest(url: url, response: MovieDetails.self) { (response, error) in
+            if let response = response {
+                completion(response, nil)
+            } else {
+                completion(nil, error)
+            }
+        }
+    }
+    class func getCast(movie_id: String, completion: @escaping ([Cast], Error?) -> Void) {
+        let url = Endpoints.getCredits(movie_id).url
+        taskForGETRequest(url: url, response: CastResult.self) { (response, error) in
+            if let response = response {
+                completion(response.cast, nil)
+            } else {
+                completion([], error)
+            }
+        }
+    }
+    
+    class func accountDetails(completion: @escaping (Bool, Error?) -> Void) {
+        taskForGETRequest(url: Endpoints.accountDetails.url, response: AccountDetails.self) {
+            (response, error) in
+            if let response = response {
+                Auth.username = response.username
+                Auth.profileImage = response.avatar.gravatar.hash
+                Auth.avatarPath = response.avatar.tmdb.avatarPath
+                completion(true, nil)
+            } else {
+                completion(false, error)
             }
         }
     }
@@ -298,9 +342,6 @@ class TMDBClient {
             }
         }
     }
-    
-    
-    
     class func markFavorite(movieId: Int, favorite: Bool, completion: @escaping (Bool, Error?) -> Void) {
         let body = MarkFavorite(mediaType: "movie", mediaId: movieId, favorite: favorite)
         taskForPOSTRequest(url: Endpoints.markFavorite.url, body: body, response: TMDBResponse.self) { (response, error) in
@@ -311,7 +352,6 @@ class TMDBClient {
             }
         }
     }
-    
     class func createSessionId(completion: @escaping (Bool, Error?) -> Void) {
         taskForPOSTRequest(url: Endpoints.createSessionId.url, body: PostSession(requestToken: Auth.requestToken), response: SessionResponse.self) { (response, error) in
             if let response = response {
@@ -333,21 +373,7 @@ class TMDBClient {
             }
         }
     }
-    
-    class func accountDetails(completion: @escaping (Bool, Error?) -> Void) {
-        taskForGETRequest(url: Endpoints.accountDetails.url, response: AccountDetails.self) {
-            (response, error) in
-            if let response = response {
-                Auth.username = response.username
-                Auth.profileImage = response.avatar.gravatar.hash
-                Auth.avatarPath = response.avatar.tmdb.avatarPath
-                completion(true, nil)
-            } else {
-                completion(false, error)
-            }
-        }
-    }
-    
+
     class func downloadAvatarImage(avatarPath: String, completion: @escaping (Data?, Error?) -> Void) {
         let url = Endpoints.avatar(avatarPath).url
         let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
@@ -358,29 +384,9 @@ class TMDBClient {
         task.resume()
     }
     
-    class func getMovieDetails(movie_id: String, completion: @escaping (MovieDetails?, Error?) -> Void) {
-        let url = Endpoints.getMovieDetails(movie_id).url
-        taskForGETRequest(url: url, response: MovieDetails.self) { (response, error) in
-            if let response = response {
-                completion(response, nil)
-            } else {
-                completion(nil, error)
-            }
-        }
-    }
-    class func getCast(movie_id: String, completion: @escaping ([Cast], Error?) -> Void) {
-        let url = Endpoints.getCredits(movie_id).url
-        taskForGETRequest(url: url, response: CastResult.self) { (response, error) in
-            if let response = response {
-                completion(response.cast, nil)
-            } else {
-                completion([], error)
-            }
-        }
-    }
+
     
     //MARK: Logout
-    
     class func logout(completion: @escaping () -> Void) {
         var request = URLRequest(url: Endpoints.logout.url)
         request.httpMethod = "DELETE"
@@ -391,6 +397,10 @@ class TMDBClient {
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             Auth.requestToken = ""
             Auth.sessionId = ""
+            Auth.avatarPath = ""
+            Auth.username = ""
+            Auth.guestSessionID = ""
+            
             completion()
         }
         task.resume()

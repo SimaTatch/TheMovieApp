@@ -15,9 +15,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    
-    
     public let cellStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = NSLayoutConstraint.Axis.vertical
@@ -26,7 +23,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
     public let progressStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = NSLayoutConstraint.Axis.horizontal
@@ -35,7 +31,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
     var posterImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
@@ -44,7 +39,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
     var progressView: CircularProgressView = {
         var progressView = CircularProgressView(frame: CGRect(x: 5, y: 8, width: 18, height: 18), lineWidth: 3, rounded: true)
 //        progressView.trackColor = .lightGray
@@ -53,7 +47,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }()
-    
     var progressValueLabel: UILabel = {
         var label = UILabel()
         label.textColor = UIColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
@@ -63,7 +56,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
     var movieTitle: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.314, green: 0.333, blue: 0.361, alpha: 1)
@@ -73,7 +65,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
     func setupViews() {
         addSubview(cellStackView)
         cellStackView.addArrangedSubview(posterImage)

@@ -10,8 +10,8 @@ class MovieModel {
     static var trending = [Movie]()
     
     //POST
-    static var favorites = [MovieDetails]()
-    static var watchlist = [MovieDetails]()
+    static var favorites = [Movie]()
+    static var watchlist = [Movie]()
 }
 
 class MovieCategories {

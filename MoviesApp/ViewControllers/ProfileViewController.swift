@@ -9,24 +9,6 @@ class ProfileViewController: UIViewController {
         self.view.setGradientBackground()
         setupConstraints()
     }
-    
-    private let userPhotoImage: UIImageView = {
-        let imageView = UIImageView()
-//        imageView.backgroundColor = #colorLiteral(red: 0.8044065833, green: 0.8044064641, blue: 0.8044064641, alpha: 1)
-//        imageView.layer.borderWidth = 5
-//        imageView.layer.borderColor = UIColor.white.cgColor
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    private let userNameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .specialGray
-        label.font = .openSans_Regular20
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.5
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     override func viewDidLayoutSubviews(){
         super.viewDidLayoutSubviews()
         self.userPhotoImage.layer.cornerRadius = self.userPhotoImage.frame.width / 2
@@ -51,9 +33,53 @@ class ProfileViewController: UIViewController {
         
     }
     
+    @objc func logoutTapped(){
+        TMDBClient.logout {
+            DispatchQueue.main.async {
+                let auth = AuthorizationViewController()
+                if let parentNav = self.tabBarController?.navigationController {
+                    parentNav.dismiss(animated: true) {
+                        parentNav.pushViewController(auth, animated: true)
+                        MovieModel.favorites.removeAll()
+                        MovieModel.watchlist.removeAll()
+                    }
+                }
+            }
+        }
+    }
+    
+    //MARK: - Setup UIs
+    private let userPhotoImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    private let userNameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = .openSans_Bold20
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    lazy var logotButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
+        button.backgroundColor = .customLightBlue
+        button.setTitle("Log Out", for: .normal)
+        button.setTitleColor(UIColor.customDarkBlue, for: .normal)
+        button.titleLabel?.font = .openSans_SemiBold18
+        button.titleLabel?.textAlignment = .center
+        button.layer.cornerRadius = 5
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
     fileprivate func setupConstraints(){
         view.addSubview(userPhotoImage)
         view.addSubview(userNameLabel)
+        view.addSubview(logotButton)
 
         userPhotoImage.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(5)
@@ -66,6 +92,13 @@ class ProfileViewController: UIViewController {
             make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(5)
             make.height.equalTo(50)
             make.width.equalTo(150)
+        }
+        logotButton.snp.makeConstraints { make in
+            make.top.equalTo(userNameLabel.snp.bottom).inset(-100)
+            make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(30)
+            make.height.equalTo(50)
+            make.right.equalTo(view.safeAreaLayoutGuide.snp.right).inset(30)
+            
         }
     }
 }
