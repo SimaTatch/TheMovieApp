@@ -17,8 +17,7 @@ Designing the API Methods
 class TMDBClient {
     
     static let apiKey = "29805ea54c4b20db9f744e00ed54144c"
-//    71314f8d174a6c05f685d6ee440b883e
-    
+
     struct Auth {
         static var accountId = 0
         static var requestToken = ""
@@ -152,8 +151,6 @@ class TMDBClient {
             }
         }
     }
-    
-    
     class func getPopular(completion: @escaping ([Movie], Error?) -> Void) {
         taskForGETRequest(url: Endpoints.getPopular.url, response: MovieResults.self) { (response, error) in
             if let response = response {
@@ -163,7 +160,6 @@ class TMDBClient {
             }
         }
     }
-    
     class func getTopRated(completion: @escaping ([Movie], Error?) -> Void) {
         taskForGETRequest(url: Endpoints.getTopRated.url, response: MovieResults.self) { (response, error) in
             if let response = response {
@@ -173,7 +169,6 @@ class TMDBClient {
             }
         }
     }
-    
     class func getTrending(completion: @escaping ([Movie], Error?) -> Void) {
         taskForGETRequest(url: Endpoints.getTrending.url, response: MovieResults.self) {
             (response, error) in
@@ -184,7 +179,6 @@ class TMDBClient {
             }
         }
     }
-    
     class func getNowPlaying(completion: @escaping ([Movie], Error?) -> Void) {
         taskForGETRequest(url: Endpoints.nowPlaying.url, response: MovieResults.self) {
             (response, error) in
@@ -195,8 +189,6 @@ class TMDBClient {
             }
         }
     }
-    
-
     class func getWatchlist(completion: @escaping ([Movie], Error?) -> Void) {
         taskForGETRequest(url: Endpoints.getWatchList.url, response: MovieResults.self) { (response, error) in
             if let response = response {
@@ -207,7 +199,6 @@ class TMDBClient {
         }
     }
     class func getFavoriteList(completion: @escaping ([Movie], Error?) -> Void) {
-        
         taskForGETRequest(url: Endpoints.getFavoriteList.url, response: MovieResults.self) { (response, error) in
             if let response = response {
                 completion(response.results, nil)
@@ -229,27 +220,26 @@ class TMDBClient {
         return task
     }
     
-    //MARK: - Guest Session
-    class func getGuestSessionID(completion: @escaping (Bool, Error?) -> Void) {
-        taskForGETRequest(url: Endpoints.getGuestSession.url, response: GuestTokenResponse.self) { (response, error) in
-            if let response = response {
-                Auth.guestSessionID = response.guestSessionID
-                completion(true, nil)
-            } else {
-                completion(false, error)
-            }
-        }
-    }
-    
-    class func getGuestRatedMovies(completion: @escaping ([Movie], Error?) -> Void) {
-        taskForGETRequest(url: Endpoints.getGuestRatedMovies.url, response: MovieResults.self) { (response, error) in
-            if let response = response {
-                completion(response.results, nil)
-            } else {
-                completion([], error)
-            }
-        }
-    }
+//    //MARK: - Guest Session
+//    class func getGuestSessionID(completion: @escaping (Bool, Error?) -> Void) {
+//        taskForGETRequest(url: Endpoints.getGuestSession.url, response: GuestTokenResponse.self) { (response, error) in
+//            if let response = response {
+//                Auth.guestSessionID = response.guestSessionID
+//                completion(true, nil)
+//            } else {
+//                completion(false, error)
+//            }
+//        }
+//    }
+//    class func getGuestRatedMovies(completion: @escaping ([Movie], Error?) -> Void) {
+//        taskForGETRequest(url: Endpoints.getGuestRatedMovies.url, response: MovieResults.self) { (response, error) in
+//            if let response = response {
+//                completion(response.results, nil)
+//            } else {
+//                completion([], error)
+//            }
+//        }
+//    }
     class func getMovieDetails(movie_id: String, completion: @escaping (MovieDetails?, Error?) -> Void) {
         let url = Endpoints.getMovieDetails(movie_id).url
         taskForGETRequest(url: url, response: MovieDetails.self) { (response, error) in
@@ -285,10 +275,19 @@ class TMDBClient {
         }
     }
     
-//MARK: - Download Poster
+//MARK: - Download Poster/Avatar
     class func downloadPosterImage(posterPath: String, completion: @escaping (Data?, Error?) -> Void) {
         let url = Endpoints.posterImageURL(posterPath).url
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            DispatchQueue.main.async {
+                completion(data, error)
+            }
+        }
+        task.resume()
+    }
+    class func downloadAvatarImage(avatarPath: String, completion: @escaping (Data?, Error?) -> Void) {
+        let url = Endpoints.avatar(avatarPath).url
+        let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
             DispatchQueue.main.async {
                 completion(data, error)
             }
@@ -374,18 +373,6 @@ class TMDBClient {
         }
     }
 
-    class func downloadAvatarImage(avatarPath: String, completion: @escaping (Data?, Error?) -> Void) {
-        let url = Endpoints.avatar(avatarPath).url
-        let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-            DispatchQueue.main.async {
-                completion(data, error)
-            }
-        }
-        task.resume()
-    }
-    
-
-    
     //MARK: Logout
     class func logout(completion: @escaping () -> Void) {
         var request = URLRequest(url: Endpoints.logout.url)

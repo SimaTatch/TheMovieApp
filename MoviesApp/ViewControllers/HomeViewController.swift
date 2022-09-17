@@ -19,11 +19,9 @@ class HomeViewController: UIViewController {
     override func viewDidLayoutSubviews(){
         super.viewDidLayoutSubviews()
         TMDBClient.downloadAvatarImage(avatarPath: TMDBClient.Auth.avatarPath) { data, error in
-            guard let data = data else {
+            guard let data = data, let downloadedAvatar = UIImage(data: data) else {
                 return
             }
-            let defaultAvatar = UIImage(systemName: "person.badge.plus")!
-            let downloadedAvatar = UIImage(data: data) ?? defaultAvatar
             self.tabBarController?.addSubviewToLastTabItem(downloadedAvatar)
         }
     }

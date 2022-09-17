@@ -40,7 +40,6 @@
 		927AD02D28CBB11900710D84 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927AD02C28CBB11900710D84 /* UITextField+Extension.swift */; };
 		927AD02F28CBC0B200710D84 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927AD02E28CBC0B200710D84 /* DetailViewController.swift */; };
 		927AD03128CCE18700710D84 /* MovieDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927AD03028CCE18700710D84 /* MovieDetails.swift */; };
-		92D4F2DD28CE19AA00C084C4 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 92D4F2DC28CE19AA00C084C4 /* SDWebImage */; };
 		92D4F2E128CEA01800C084C4 /* CastCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D4F2E028CEA01800C084C4 /* CastCollectionViewCell.swift */; };
 		92D4F2E328CEA2B300C084C4 /* Cast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D4F2E228CEA2B300C084C4 /* Cast.swift */; };
 		92D4F2E528CF5E7400C084C4 /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D4F2E428CF5E7400C084C4 /* UIButton+Extension.swift */; };
@@ -49,7 +48,6 @@
 		92D4F2EB28D0CFFD00C084C4 /* MarkFavorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D4F2EA28D0CFFD00C084C4 /* MarkFavorite.swift */; };
 		92D4F2ED28D0D00900C084C4 /* MarkWatchlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D4F2EC28D0D00900C084C4 /* MarkWatchlist.swift */; };
 		92D4F2EF28D0D04200C084C4 /* LogoutRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D4F2EE28D0D04200C084C4 /* LogoutRequest.swift */; };
-		92FD05272888417B0009D8ED /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 92FD05262888417B0009D8ED /* SnapKit */; };
 		92FD052928889ED50009D8ED /* UISegmentControl+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FD052828889ED50009D8ED /* UISegmentControl+Extension.swift */; };
 		92FD052F288952F20009D8ED /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FD052E288952F20009D8ED /* TabBarController.swift */; };
 		92FD0531288953D40009D8ED /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FD0530288953D40009D8ED /* HomeViewController.swift */; };
@@ -68,6 +66,7 @@
 		92FD05562892F88B0009D8ED /* MovieModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FD05552892F88B0009D8ED /* MovieModels.swift */; };
 		92FD05582892FC3B0009D8ED /* GuestTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FD05572892FC3B0009D8ED /* GuestTokenResponse.swift */; };
 		92FD055A2896834F0009D8ED /* TMDBTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FD05592896834F0009D8ED /* TMDBTypes.swift */; };
+		92FFE99F28D5F4CD00867AF7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 92FFE99E28D5F4CD00867AF7 /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -158,8 +157,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92D4F2DD28CE19AA00C084C4 /* SDWebImage in Frameworks */,
-				92FD05272888417B0009D8ED /* SnapKit in Frameworks */,
+				92FFE99F28D5F4CD00867AF7 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,8 +368,7 @@
 			);
 			name = MoviesApp;
 			packageProductDependencies = (
-				92FD05262888417B0009D8ED /* SnapKit */,
-				92D4F2DC28CE19AA00C084C4 /* SDWebImage */,
+				92FFE99E28D5F4CD00867AF7 /* SnapKit */,
 			);
 			productName = MoviesApp;
 			productReference = 920312E828881FAE009111E8 /* MoviesApp.app */;
@@ -446,8 +443,7 @@
 			);
 			mainGroup = 920312DF28881FAE009111E8;
 			packageReferences = (
-				92FD05252888417B0009D8ED /* XCRemoteSwiftPackageReference "SnapKit" */,
-				92D4F2DB28CE19AA00C084C4 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				92FFE99D28D5F4CD00867AF7 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 920312E928881FAE009111E8 /* Products */;
 			projectDirPath = "";
@@ -884,33 +880,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		92D4F2DB28CE19AA00C084C4 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SDWebImage/SDWebImage.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		92FD05252888417B0009D8ED /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+		92FFE99D28D5F4CD00867AF7 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				branch = develop;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		92D4F2DC28CE19AA00C084C4 /* SDWebImage */ = {
+		92FFE99E28D5F4CD00867AF7 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 92D4F2DB28CE19AA00C084C4 /* XCRemoteSwiftPackageReference "SDWebImage" */;
-			productName = SDWebImage;
-		};
-		92FD05262888417B0009D8ED /* SnapKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 92FD05252888417B0009D8ED /* XCRemoteSwiftPackageReference "SnapKit" */;
+			package = 92FFE99D28D5F4CD00867AF7 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */

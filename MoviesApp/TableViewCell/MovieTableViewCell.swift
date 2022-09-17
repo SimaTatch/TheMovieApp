@@ -9,7 +9,6 @@ protocol MovieTableViewCellDelegate: AnyObject{
 
 class MovieTableViewCell: UITableViewCell {
     
-//    var selectedIndex = 0
     weak var delegate: MovieTableViewCellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -24,13 +23,14 @@ class MovieTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    //MARK: - CollectionView
     func setupCollectionView() {
         movieCellCollectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.reuseId)
         movieCellCollectionView.dataSource = self
         movieCellCollectionView.delegate = self
     }
     
-    //MARK: - UI
+    //MARK: - Setup UI
     let movieCellLabel: UILabel = {
       let label = UILabel()
         label.font = .openSans_SemiBold18
@@ -39,17 +39,7 @@ class MovieTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-//    let movieCellSegmentControll: OYSegmentControl = {
-//        let items = ["Streaming","On TV","For Rent","In Theaters"]
-//        let sc = OYSegmentControl(items: items)
-////        sc.addTarget(self, action: #selector(indexChanged), for: .valueChanged)
-//        sc.removeDividerLine()
-//        sc.selectedSegmentIndex = 0
-//        sc.translatesAutoresizingMaskIntoConstraints = false
-//        return sc
-//    }()
-    
+
     let movieCellCollectionView: UICollectionView = {
         // init the layout
         let layout = UICollectionViewFlowLayout()
@@ -75,7 +65,6 @@ class MovieTableViewCell: UITableViewCell {
             make.right.equalTo(-5)
             make.height.equalTo(25)
         }
-
         movieCellCollectionView.snp.makeConstraints { make in
             make.top.equalTo(movieCellLabel.snp.bottom).inset(-7)
             make.left.equalTo(5)
@@ -136,9 +125,7 @@ extension MovieTableViewCell: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.reuseId, for: indexPath) as! MovieCollectionViewCell
-        
+
         var movie: Movie
         
         switch movieCellCollectionView.tag {
@@ -149,7 +136,6 @@ extension MovieTableViewCell: UICollectionViewDelegate, UICollectionViewDataSour
         default:
             movie = MovieModel.popular[indexPath.row]
         }
-        
         if let movieId = movie.id {
             let detailVC = DetailViewController(movie: movie, movieId:  String(movieId))
             detailVC.movie = movie

@@ -17,6 +17,7 @@ class CastCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - Setup UI
     var castName: UILabel = {
         let label = UILabel()
         label.textColor = .customDarkBlue
@@ -70,5 +71,4 @@ class CastCollectionViewCell: UICollectionViewCell {
             make.height.equalTo(25)
         }
     }
-    
 }

@@ -16,6 +16,7 @@ class SearchTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - Setup UI
     var posterImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
@@ -24,7 +25,6 @@ class SearchTableViewCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
     var movieTitle: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.314, green: 0.333, blue: 0.361, alpha: 1)
@@ -36,19 +36,16 @@ class SearchTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
     var movieDescrip: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.314, green: 0.333, blue: 0.361, alpha: 1)
         label.font = .openSans_Regular14
-//        label.lineBreakMode = .byWordWrapping
         label.sizeToFit()
         label.numberOfLines = 0
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
     public let titleAndDescripStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = NSLayoutConstraint.Axis.vertical

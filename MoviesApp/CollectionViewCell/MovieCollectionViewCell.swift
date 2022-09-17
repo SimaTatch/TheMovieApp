@@ -15,6 +15,8 @@ class MovieCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: - Setup UI
     public let cellStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = NSLayoutConstraint.Axis.vertical
@@ -41,9 +43,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }()
     var progressView: CircularProgressView = {
         var progressView = CircularProgressView(frame: CGRect(x: 5, y: 8, width: 18, height: 18), lineWidth: 3, rounded: true)
-//        progressView.trackColor = .lightGray
         progressView.backgroundColor = .clear
-//        progressView.progress = 0.4
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }()

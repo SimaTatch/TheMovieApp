@@ -9,7 +9,7 @@ class SearchViewController: UIViewController {
     var selectedIndex = 0
     var currentSearchTask: URLSessionTask?
 
-    
+    //MARK: - SearchController implementation
     lazy var movieSearchController = UISearchController(searchResultsController: nil)
     
     private var searchBarIsEmpty: Bool {
@@ -36,6 +36,7 @@ class SearchViewController: UIViewController {
         movieSearchController.isActive = false
     }
     
+    //MARK: - TableView setup
     let searchTableView: UITableView = {
         let tv = UITableView()
         tv.backgroundColor = .clear
@@ -43,7 +44,6 @@ class SearchViewController: UIViewController {
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
-
     private func tableViewSetup() {
         searchTableView.rowHeight = UITableView.automaticDimension
         searchTableView.register(SearchTableViewCell.self, forCellReuseIdentifier: "CellSearch")
@@ -84,10 +84,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         if isFiltering {
             movies.count
         }
-//            else {
             return MovieModel.trending.count
-//        }
-//        return 0
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

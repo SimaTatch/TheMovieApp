@@ -2,16 +2,13 @@
 import UIKit
 import SnapKit
 
-//protocol AuthorizationVCDelegate: AnyObject {
-//    func avatarImage(image: UIImage)
-//}
+protocol AuthorizationVCDelegate: AnyObject {
+    func avatarImage(image: UIImage)
+}
 
 class AuthorizationViewController: UIViewController {
 
     var movieDict: [String:[Movie]]?
-
-    
-//    weak var delegate: AuthorizationVCDelegate? // HomeViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,15 +28,6 @@ class AuthorizationViewController: UIViewController {
                 MovieModel.nowPlaying = movies
             }
             TMDBClient.getTrending { movies, error in
-
-//                for movie in movies {
-//                    if ((self.movieDict?.keys.contains(movie.mediaType ?? "")) != nil) {
-//                        self.movieDict![movie.mediaType ?? ""]?.append(movie)
-//                    } else {
-//                        self.movieDict?.updateValue(movie, forKey: movie.mediaType ?? "")
-//                    }
-//                }
-//                let groupedCurrencyKey = Dictionary(grouping: self, by: {String($0.prefix(1))})
                 MovieModel.trending = movies
             }
         }
@@ -50,19 +38,15 @@ class AuthorizationViewController: UIViewController {
         TMDBClient.getRequestToken(completion: handleRequestTokenResponse(success:error:))
     }
 
-    // MARK:
     func handleRequestTokenResponse(success: Bool, error: Error?) {
         if success {
-//            print(TMDBClient.Auth.requestToken)
             TMDBClient.login(username: self.userNameTextField.text ?? "", password: self.passwordTextField.text ?? "", completion: self.handleLoginResponse(success:error:))
         } else {
-//            print("Not Successful!")
             showLoginFailure(message: error?.localizedDescription ?? "")
         }
     }
 
     func handleLoginResponse(success: Bool, error: Error?) {
-//        print(TMDBClient.Auth.requestToken)
         if success {
             TMDBClient.createSessionId(completion: handleSessionResponse(success:error:))
         } else {
@@ -74,12 +58,12 @@ class AuthorizationViewController: UIViewController {
         setLoggingIn(false)
         if success {
             TMDBClient.accountDetails(completion: handleAccountDetailsResponse(success:error:))
-                TMDBClient.getFavoriteList { movies, error in
-                    MovieModel.favorites = movies
-                }
-                TMDBClient.getWatchlist { movies, error in
-                    MovieModel.watchlist = movies
-                }
+            TMDBClient.getFavoriteList { movies, error in
+                MovieModel.favorites = movies
+            }
+            TMDBClient.getWatchlist { movies, error in
+                MovieModel.watchlist = movies
+            }
         } else {
             showLoginFailure(message: error?.localizedDescription ?? "")
         }
@@ -116,7 +100,7 @@ class AuthorizationViewController: UIViewController {
         self.present(alertVC, animated: true, completion: nil)
     }
     
-    //MARK: - UI
+    //MARK: - Setup UI
     let activityIndicator: UIActivityIndicatorView = {
         let activityIn = UIActivityIndicatorView(style: .white)
         activityIn.translatesAutoresizingMaskIntoConstraints = false
@@ -303,13 +287,11 @@ class AuthorizationViewController: UIViewController {
         welcomeLabel.snp.makeConstraints { make in
             make.top.equalTo(0)
             make.left.right.equalTo(0)
-//            make.width.equalTo(335)
             make.height.equalTo(58)
         }
         descriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(welcomeLabel.snp.bottom).inset(-6)
             make.left.right.equalTo(0)
-//            make.width.equalTo(335)
             make.height.equalTo(60)
         }
         loginSegmentControl.snp.makeConstraints { make in
@@ -317,12 +299,10 @@ class AuthorizationViewController: UIViewController {
             make.left.right.equalTo(25)
             make.right.equalTo(-25)
             make.height.equalTo(55)
-//            make.width.equalTo(343)
         }
         userNameLabel.snp.makeConstraints { make in
             make.top.equalTo(loginSegmentControl.snp.bottom).inset(-16)
             make.left.right.equalTo(0)
-//            make.width.equalTo(343)
             make.height.equalTo(22)
         }
         userNameTextField.snp.makeConstraints { make in

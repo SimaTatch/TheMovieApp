@@ -1,17 +1,16 @@
 
 import UIKit
 import SnapKit
-import SDWebImage
 
 class DetailViewController: UIViewController {
+    
+    var movieId: String
+    var movie: Movie
     
     var contentSize: CGSize{
         CGSize(width: view.frame.width, height: view.frame.height)
     }
     let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .light, scale: .small)
-    
-    var movieId: String
-    var movie: Movie
     
     var isWatchlist: Bool {
         return MovieModel.watchlist.contains(movie)
@@ -40,16 +39,6 @@ class DetailViewController: UIViewController {
             self.progressValueLabel.text = "\(voteAverageString) %"
         }
         super.init(nibName: nil, bundle: nil)
-//        self.navigationController?.navigationBar.topItem?.title = details.title
-//        if let posterPath = movie.posterPath {
-//            TMDBClient.downloadPosterImage(posterPath: posterPath) { (data, error) in
-//                guard let data = data else {
-//                    return
-//                }
-//                let downloadedImage = UIImage(data: data)
-//                self.posterImage.image = downloadedImage
-//            }
-//        }
     }
     
     required init?(coder: NSCoder) {
@@ -118,6 +107,8 @@ class DetailViewController: UIViewController {
             }
         }
     }
+    
+    //MARK: - Mark movie after pressing the button
     @objc func buttonTaped(sender: UIButton) {
         switch sender.currentTitle{
         case "Favorite":
@@ -128,6 +119,8 @@ class DetailViewController: UIViewController {
             return
         }
     }
+    
+    //MARK: = UIAlertController
     func showMarkFailure(message: String) {
         let alertVC = UIAlertController(title: "Sorry, you can't mark this movie. Please, login first.", message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
@@ -135,6 +128,7 @@ class DetailViewController: UIViewController {
         }))
         self.present(alertVC, animated: true, completion: nil)
     }
+    
     //MARK: - Set buttons' color
     func toggleFavButton(_ button: UIButton, isSaved: Bool) {
         if isSaved {
@@ -155,7 +149,7 @@ class DetailViewController: UIViewController {
         }
     }
     
-    //MARK: - Setup UIs
+    //MARK: - Setup UI
     let movieTitle: UILabel = {
       let label = UILabel()
         label.font = .openSans_SemiBold18
@@ -268,8 +262,6 @@ class DetailViewController: UIViewController {
         cv.backgroundColor = .clear
         cv.showsHorizontalScrollIndicator = false
         cv.showsVerticalScrollIndicator = false
-//        cv.isUserInteractionEnabled = true
-        // Activate constaints
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
