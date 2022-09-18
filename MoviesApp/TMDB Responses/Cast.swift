@@ -15,7 +15,7 @@ struct CastResult: Codable {
 }
 
 // MARK: - Cast
-struct Cast: Codable {
+struct Cast: Codable, Equatable {
     let adult: Bool?
     let gender, id: Int?
     let knownForDepartment: Department?

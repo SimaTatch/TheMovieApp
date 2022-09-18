@@ -9,28 +9,46 @@ import XCTest
 @testable import MoviesApp
 
 class MoviesAppTests: XCTestCase {
+    
+    var movies = [Movie]()
+    var credits = [Cast]()
+    let thorMovieID = "616037"
+    let login = "Serafima728"
+    let password = "s11ima"
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    override func setUp() {
+        super.setUp()
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    func test_get_trending_movie(){
+        TMDBClient.getTrending { movie, error in
+            XCTAssertEqual(movie, self.movies)
         }
     }
-
+    
+    func test_get_request_token(){
+        TMDBClient.getRequestToken { success, error in
+            XCTAssertEqual(true, success)
+        }
+    }
+    
+    func test_get_cast(){
+        TMDBClient.getCast(movie_id: thorMovieID) { cast, error in
+            XCTAssertEqual(cast, self.credits)
+        }
+    }
+    
+    func test_login(){
+        TMDBClient.login(username: login, password: password) { success, error in
+            XCTAssertEqual(true, success)
+        }
+    }
+    func test_logout(){
+        TMDBClient.logout {
+            XCTAssertEqual(TMDBClient.Auth.sessionId, "")
+            XCTAssertEqual(TMDBClient.Auth.requestToken, "")
+            XCTAssertEqual(TMDBClient.Auth.username, "")
+        }
+    }
 }
